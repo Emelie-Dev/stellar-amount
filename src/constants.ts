@@ -1,0 +1,2 @@
+export const STROOPS_PER_UNIT = 10_000_000n;
+export const MAX_STROOPS = 9_223_372_036_854_775_807n;

@@ -1,0 +1,13 @@
+src/
+tests/
+.github/
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+SECURITY.md
+tsconfig.json
+tsup.config.ts
+vitest.config.ts
+eslint.config.js
+.prettierrc
+.gitignore
+.npmignore
