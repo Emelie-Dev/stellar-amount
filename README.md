@@ -42,9 +42,32 @@ toStroops(amount: string | number | bigint, opts?: { rounding?: RoundingMode }):
 fromStroops(stroops: bigint | string | number): string
 isValidAmount(amount: string): boolean
 assertValidAmount(amount: string): asserts amount is string
+tryToStroops(amount: string | number | bigint, opts?: { rounding?: RoundingMode }): StellarAmountResult
+isSuccess(result: StellarAmountResult): result is StellarAmountSuccess
+isFailure(result: StellarAmountResult): result is StellarAmountFailure
 ```
 
 `toStroops("1.2")` returns `12000000n`; with `toStroops("1.23456789", { rounding: "round" })`, excess decimal places are rounded to the nearest stroop. Strings reject whitespace, signs, invalid characters, and more than seven fractional digits unless a rounding mode is supplied. Accepted forms include `"1"`, `"1."`, `".5"`, and `"0.0000001"`. `fromStroops` accepts only non-negative integer stroops and produces canonical unit text without trailing zeros.
+
+### Non-throwing parsing
+
+`toStroops` throws on invalid input, which is the right default for trusted data but awkward for form validation, where invalid input is expected rather than exceptional. `tryToStroops` returns a discriminated result instead and leaves `toStroops` and `isValidAmount` unchanged:
+
+```ts
+import { tryToStroops, isSuccess } from "stellar-amount";
+
+const result = tryToStroops(input);
+
+if (isSuccess(result)) {
+  send(result.stroops); // result.stroops: bigint
+} else {
+  // result.code is one of the documented error codes
+  if (result.code === "TOO_MANY_DECIMALS") showHint("Use at most 7 decimal places.");
+  else showError(result.message);
+}
+```
+
+The result is `{ ok: true, stroops: bigint }` or `{ ok: false, code, message, error }`, where `error` is the original `StellarAmountError`. Only `StellarAmountError` is converted into a failure: any other exception is re-thrown, so a genuine bug is never mistaken for invalid user input.
 
 ### Arithmetic
 

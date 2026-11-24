@@ -5,3 +5,11 @@ export { isValidAmount, assertValidAmount } from "./parse.js";
 export { add, sub, mul, div, percent, compare, min, max } from "./math.js";
 export { format, type FormatOptions } from "./format.js";
 export type { RoundingMode } from "./rounding.js";
+export {
+  tryToStroops,
+  isSuccess,
+  isFailure,
+  type StellarAmountSuccess,
+  type StellarAmountFailure,
+  type StellarAmountResult,
+} from "./result.js";
